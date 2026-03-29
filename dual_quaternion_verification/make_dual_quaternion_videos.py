@@ -139,6 +139,23 @@ def encode_alpha_mov(frames_dir, output_path, fps):
     subprocess.run(cmd, check=True)
 
 
+def encode_mp4(frames_dir, output_path, fps):
+    cmd = [
+        "ffmpeg",
+        "-y",
+        "-framerate",
+        str(fps),
+        "-i",
+        str(frames_dir / "frame_%04d.png"),
+        "-c:v",
+        "libx264",
+        "-pix_fmt",
+        "yuv420p",
+        str(output_path),
+    ]
+    subprocess.run(cmd, check=True)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Generate transparent videos for dual quaternion orientation/translation motion.")
     parser.add_argument("--frames", type=int, default=120)
@@ -161,8 +178,12 @@ def main():
 
     orientation_mov = out_dir / "orientation_pi_to_zero_transparent.mov"
     translation_mov = out_dir / "translation_3to0_with_pi_orientation_transparent.mov"
+    orientation_mp4 = out_dir / "orientation_pi_to_zero_transparent.mp4"
+    translation_mp4 = out_dir / "translation_3to0_with_pi_orientation_transparent.mp4"
     encode_alpha_mov(ori_frames, orientation_mov, args.fps)
     encode_alpha_mov(trn_frames, translation_mov, args.fps)
+    encode_mp4(ori_frames, orientation_mp4, args.fps)
+    encode_mp4(trn_frames, translation_mp4, args.fps)
 
     if not args.keep_frames:
         shutil.rmtree(ori_frames, ignore_errors=True)
@@ -170,6 +191,8 @@ def main():
 
     print(f"Saved: {orientation_mov}")
     print(f"Saved: {translation_mov}")
+    print(f"Saved: {orientation_mp4}")
+    print(f"Saved: {translation_mp4}")
 
 
 if __name__ == "__main__":

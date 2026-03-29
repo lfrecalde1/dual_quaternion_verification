@@ -423,7 +423,7 @@ def _apply_view(ax, view):
 
 def plot_translation_orientation_3d(s_t, theta, dual_log_norm, classical_norm, out, view="iso", style="surface"):
     S, TH = np.meshgrid(s_t, theta)
-    fig = plt.figure(figsize=(12, 5.5))
+    fig = plt.figure(figsize=(14, 6.4))
     ax1 = fig.add_subplot(121, projection="3d")
     ax2 = fig.add_subplot(122, projection="3d")
 
@@ -431,26 +431,28 @@ def plot_translation_orientation_3d(s_t, theta, dual_log_norm, classical_norm, o
         surf1 = ax1.plot_wireframe(S, TH, dual_log_norm, rstride=3, cstride=3, linewidth=0.7, color="teal")
     else:
         surf1 = ax1.plot_surface(S, TH, dual_log_norm, cmap="viridis", edgecolor="none", alpha=0.95)
-    ax1.set_title("Dual-Quaternion Log Translation Norm")
-    ax1.set_xlabel("Translation")
-    ax1.set_ylabel("Orientation Error [rad]")
+    ax1.set_title("Dual-Quaternion Log Translation Norm", fontsize=14, pad=10)
+    ax1.tick_params(axis="both", which="major", labelsize=16)
+    ax1.tick_params(axis="z", which="major", labelsize=16)
     if style == "surface":
-        fig.colorbar(surf1, ax=ax1, shrink=0.7, pad=0.08)
+        cb1 = fig.colorbar(surf1, ax=ax1, shrink=0.82, pad=0.02)
+        cb1.ax.tick_params(labelsize=16)
     _apply_view(ax1, view)
 
     if style == "wireframe":
         surf2 = ax2.plot_wireframe(S, TH, classical_norm, rstride=3, cstride=3, linewidth=0.7, color="purple")
     else:
         surf2 = ax2.plot_surface(S, TH, classical_norm, cmap="plasma", edgecolor="none", alpha=0.95)
-    ax2.set_title("Classical Translation")
-    ax2.set_xlabel("Translation")
-    ax2.set_ylabel("Orientation Error [rad]")
+    ax2.set_title("Classical Translation", fontsize=14, pad=10)
+    ax2.tick_params(axis="both", which="major", labelsize=16)
+    ax2.tick_params(axis="z", which="major", labelsize=16)
     if style == "surface":
-        fig.colorbar(surf2, ax=ax2, shrink=0.7, pad=0.08)
+        cb2 = fig.colorbar(surf2, ax=ax2, shrink=0.82, pad=0.02)
+        cb2.ax.tick_params(labelsize=16)
     _apply_view(ax2, view)
 
-    fig.tight_layout()
-    fig.savefig(out, dpi=180)
+    fig.subplots_adjust(left=0.01, right=0.99, bottom=0.02, top=0.93, wspace=0.02)
+    fig.savefig(out, dpi=200, bbox_inches="tight", pad_inches=0.02)
     plt.show()
     print(f"Saved plot: {out}")
 
